@@ -22,6 +22,7 @@ serial_pattern = re.compile("\\w\\w\\w\\ \\dx\\d{4}")
 # advanced mode
 advanced = False
 
+
 # holds button states and amp values
 serial_table = {
 	"BTT1":0,
