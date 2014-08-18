@@ -6,8 +6,11 @@ from time import sleep, time
 import re
 import tkFont
 
-debug = True
-ser_com = True
+# set to True for debug messages
+debug = False
+
+# set to True for serial communication
+ser_com = False
 
 if debug: print("imports done!")
 
@@ -15,6 +18,26 @@ if debug: print("imports done!")
 serial_bauds = 9600
 serial_port = '/dev/ttyACM0'
 serial_pattern = re.compile("\\w\\w\\w\\ \\dx\\d{4}")
+
+
+# holds button states and amp values
+serial_table = {
+	"BTT1":0,
+	"BTT2":0,
+	"BTT3":0,
+	"BTT4":0,
+	"BTT5":0,
+	"BTT6":0,
+	"BTT7":0,
+	"BTT8":0,
+	"BTT9":0,
+	"KAMP":"",
+	"HAMP":"",
+	"AAMP":"",
+	"GPER":""
+}
+
+#print "" == serial_table["AAMP"]
 
 if ser_com:
 	ser = Serial(serial_port, serial_bauds)
@@ -68,8 +91,8 @@ def update_from_serial():
 				hwzv.insert(0, e[4:10])
 
 		
-    #kam['text'] = str(time())
-    #ham['text'] = str(time())
+    kam['text'] = str(time())
+    ham['text'] = str(time())
     #kwz['text'] = str(time())
     #hwz['text'] = str(time())
     
@@ -82,26 +105,34 @@ entry_padx = 100
 entry_pady = 20
 entry_width = 10
 
+
 kam = Label(root, text = 'KAM value:', font = labelFont)
 kam.grid(row=1, column=1, padx=label_padx, pady=label_pady)
 ham = Label(root, text = 'HAM value:', font = labelFont)
-ham.grid(row=1, column=2, padx=label_padx, pady=label_pady)
+ham.grid(row=1, column=3, padx=label_padx, pady=label_pady)
 kwz = Label(root, text = 'KWZ value:', font = labelFont)
 kwz.grid(row=3, column=1, padx=label_padx, pady=label_pady)
 hwz = Label(root, text = 'HWZ value:', font = labelFont)
-hwz.grid(row=3, column=2, padx=label_padx, pady=label_pady)
+hwz.grid(row=3, column=3, padx=label_padx, pady=label_pady)
 
-kamv = Entry(root, font = labelFont, width=entry_width)
+kamv = Entry(root, font = labelFont, width=entry_width, justify=CENTER, state="normal", takefocus="no", highlightthickness=False)
 kamv.grid(row=2, column=1, padx=entry_padx, pady=entry_pady)
 hamv = Entry(root, font = labelFont, width=entry_width)
-hamv.grid(row=2, column=2, padx=entry_padx, pady=entry_pady)
+hamv.grid(row=2, column=3, padx=entry_padx, pady=entry_pady)
 kwzv = Entry(root, font = labelFont, width=entry_width)
 kwzv.grid(row=4, column=1, padx=entry_padx, pady=entry_pady)
 hwzv = Entry(root, font = labelFont, width=entry_width)
-hwzv.grid(row=4, column=2, padx=entry_padx, pady=entry_pady)
+hwzv.grid(row=4, column=3, padx=entry_padx, pady=entry_pady)
 
-root.title("ArduPi 0.3.1")
-root.geometry("1000x600")
+exitButton = Button(root, text = "kill", command=quit)
+exitButton.grid(row=6, column=2)
+
+root.title("ArduPi 0.3.2")
+#root.geometry("1000x600")
+
+root.overrideredirect(True)
+root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
+
 root.after(time_space, update_from_serial)
-root.bind("<Escape>", quit)
+#root.bind("<Escape>", quit)
 root.mainloop()

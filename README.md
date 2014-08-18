@@ -8,6 +8,9 @@
 - podswietlenie lub inny podobny sygnal w momencie zmieny wartosci -> update tylko jesli sie zmienily wzgledem ostatniego stau trzymanego w tablicy
 - szare pola dla zablokowanych pol (ktorych nie mozna modyfikowac)
 
+###ver 0.3.2:
+- fullscreen i przycisk wyjscia
+
 ###ver 0.3.1:
 - grid 4 labele, 4 entry
 - pozycjonowanie gridu
