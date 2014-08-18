@@ -7,7 +7,7 @@ import re
 import tkFont
 
 # set to True for debug messages
-debug = False
+debug = True
 
 # set to True for serial communication
 ser_com = False
@@ -19,6 +19,8 @@ serial_bauds = 9600
 serial_port = '/dev/ttyACM0'
 serial_pattern = re.compile("\\w\\w\\w\\ \\dx\\d{4}")
 
+# advanced mode
+advanced = False
 
 # holds button states and amp values
 serial_table = {
@@ -52,14 +54,21 @@ time_space = 100
 # font for labels
 labelFont = tkFont.Font(family = "Georgia", size = 32)
 
-# font for variables in text boxes
+def update_mode():
+	# if advanced mode is toggled ON
+	if advanced:
+		for w in adv_widgets:
+			w.grid_forget()
+	else:
+		for w in adv_widgets:
+			w.grid()
 
 # updating method (checks serial for values)
 def update_from_serial():
-    if debug: print "update - " + str(time())
-    
-    # get values from serial named 'ser'
-    if ser_com:
+	# update mode
+	update_mode()
+	# serial update
+	if ser_com:
 		line = ser.readline()
 		if debug: print 'raw: ' + line
 		match = serial_pattern.findall(line)
@@ -89,14 +98,7 @@ def update_from_serial():
 				#hwz['text'] = e[4:10]
 				hwzv.delete(0, END)
 				hwzv.insert(0, e[4:10])
-
-		
-    kam['text'] = str(time())
-    ham['text'] = str(time())
-    #kwz['text'] = str(time())
-    #hwz['text'] = str(time())
-    
-    root.after(time_space, update_from_serial)  # reschedule event in 2 seconds
+	root.after(time_space, update_from_serial)  # reschedule event in 2 seconds
 
 # conts for guid grid padding
 label_padx = 100
@@ -104,7 +106,6 @@ label_pady = 20
 entry_padx = 100
 entry_pady = 20
 entry_width = 10
-
 
 kam = Label(root, text = 'KAM value:', font = labelFont)
 kam.grid(row=1, column=1, padx=label_padx, pady=label_pady)
@@ -124,8 +125,24 @@ kwzv.grid(row=4, column=1, padx=entry_padx, pady=entry_pady)
 hwzv = Entry(root, font = labelFont, width=entry_width)
 hwzv.grid(row=4, column=3, padx=entry_padx, pady=entry_pady)
 
-exitButton = Button(root, text = "kill", command=quit)
-exitButton.grid(row=6, column=2)
+adv_widgets = []
+adv_widgets.append(kamv)
+adv_widgets.append(hamv)
+
+def switchMode():
+	global advanced
+	if advanced:
+		advanced = False
+	else:
+		advanced = True
+
+# temp buttons for debug
+if debug:
+	exitButton = Button(root, text = "Zamknij", command=quit)
+	exitButton.grid(row=6, column=2)
+
+	switchButton = Button(root, text = "Zaawansowane", command=switchMode)
+	switchButton.grid(row=6, column=3)
 
 root.title("ArduPi 0.3.2")
 #root.geometry("1000x600")
