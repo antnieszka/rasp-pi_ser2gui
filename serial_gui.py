@@ -103,7 +103,7 @@ bas_widgets = []
 
 entrySett = {"font":labelFont, "width":None, "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
 basicEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
-advancedEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+advancedEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"disabled", "takefocus":"no", "highlightthickness":False}
 
 buttonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
 basicLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
@@ -205,7 +205,7 @@ if debug:
 	switchButton = Button(root, text = "Zaawansowane", command = switchMode)
 	switchButton.grid(row=5, column=3)
 
-root.title("ArduPi 0.3.2")
+root.title("ArduPi 0.4.1")
 
 #createBasicScreen()
 
