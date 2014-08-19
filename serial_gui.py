@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from serial import Serial
 from Tkinter import *
@@ -40,7 +41,6 @@ serial_table = {
 	"GPER":""
 }
 
-#print "" == serial_table["AAMP"]
 
 if ser_com:
 	ser = Serial(serial_port, serial_bauds)
@@ -101,30 +101,37 @@ def update_from_serial():
 				hwzv.insert(0, e[4:10])
 	root.after(time_space, update_from_serial)  # reschedule event in 2 seconds
 
-# conts for guid grid padding
-label_padx = 100
-label_pady = 20
-entry_padx = 100
-entry_pady = 20
-entry_width = 10
 
-kam = Label(root, text = 'KAM value:', font = labelFont)
-kam.grid(row=1, column=1, padx=label_padx, pady=label_pady)
-ham = Label(root, text = 'HAM value:', font = labelFont)
-ham.grid(row=1, column=3, padx=label_padx, pady=label_pady)
-kwz = Label(root, text = 'KWZ value:', font = labelFont)
-kwz.grid(row=3, column=1, padx=label_padx, pady=label_pady)
-hwz = Label(root, text = 'HWZ value:', font = labelFont)
-hwz.grid(row=3, column=3, padx=label_padx, pady=label_pady)
+entrySett = {"font":labelFont, "width":None, "justify":CENTER, "state":"normal", "takefocus":"no", "highlightthickness":False}
+basicLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
 
-kamv = Entry(root, font = labelFont, width=entry_width, justify=CENTER, state="normal", takefocus="no", highlightthickness=False)
-kamv.grid(row=2, column=1, padx=entry_padx, pady=entry_pady)
-hamv = Entry(root, font = labelFont, width=entry_width)
-hamv.grid(row=2, column=3, padx=entry_padx, pady=entry_pady)
-kwzv = Entry(root, font = labelFont, width=entry_width)
-kwzv.grid(row=4, column=1, padx=entry_padx, pady=entry_pady)
-hwzv = Entry(root, font = labelFont, width=entry_width)
-hwzv.grid(row=4, column=3, padx=entry_padx, pady=entry_pady)
+def createBasicScreen():
+	global basicLabelSett
+	# ustawienia fabryczne
+	holder1 = Label(root, width=root.winfo_screenwidth()/3)
+	holder1.grid(row=1, column=1)
+	basicLabelSett["text"]="Przywróć ustawienia fabryczne"
+	labDefSett = Label(root, basicLabelSett)
+	labDefSett.grid(row=1, column=1, sticky=W, pady=0)
+	# przycisk pierwszy, po lewej
+	basicLabelSett["text"]="przycisk pierwszy"
+	button1 = Label(root, basicLabelSett)
+	button1.grid(row=2, column=1, sticky=W, pady=30)
+	# przycisk drugi, po lewej
+	basicLabelSett["text"]="przycisk drugi"
+	button2 = Label(root, basicLabelSett)
+	button2.grid(row=3, column=1, sticky=W, pady=30)
+	# przycisk trzeci, po lewej
+	basicLabelSett["text"]="przycisk trzeci"
+	button3 = Label(root, basicLabelSett)
+	button3.grid(row=4, column=1, sticky=W, pady=30)
+
+createBasicScreen()
+
+kamv = Entry(root, entrySett)
+kamv.grid(row=2, column=1)
+hamv = Entry(root, entrySett)
+hamv.grid(row=2, column=3)
 
 adv_widgets = []
 adv_widgets.append(kamv)
@@ -140,7 +147,7 @@ def switchMode():
 # temp buttons for debug
 if debug:
 	exitButton = Button(root, text = "Zamknij", command=quit)
-	exitButton.grid(row=6, column=2)
+	exitButton.grid(row=3, column=2)
 
 	switchButton = Button(root, text = "Zaawansowane", command=switchMode)
 	switchButton.grid(row=6, column=3)
@@ -148,7 +155,7 @@ if debug:
 # banner
 photo = PhotoImage(file="logo.gif")
 banner = Label(root, image=photo)
-banner.grid(row=1, column=2, sticky="N")
+banner.grid(row=1, column=1, sticky="N", columnspan=3)
 
 root.title("ArduPi 0.3.2")
 #root.geometry("1000x600")
