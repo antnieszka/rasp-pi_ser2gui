@@ -23,7 +23,6 @@ serial_pattern = re.compile("\\w\\w\\w\\ \\dx\\d{4}")
 # advanced mode
 advanced = False
 
-
 # holds button states and amp values
 serial_table = {
 	"BTT1":0,
@@ -49,25 +48,19 @@ if ser_com:
 # Main window
 root = Tk()
 
+# banner
+photo = PhotoImage(file="logo.gif")
+
 # intervals between updating variables from serial
 time_space = 100
 
 # font for labels
 labelFont = tkFont.Font(family = "Georgia", size = 32)
 
-def update_mode():
-	# if advanced mode is toggled ON
-	if advanced:
-		for w in adv_widgets:
-			w.grid_forget()
-	else:
-		kamv.grid(row=2, column=1, padx=entry_padx, pady=entry_pady)
-		hamv.grid(row=2, column=3, padx=entry_padx, pady=entry_pady)
+
 
 # updating method (checks serial for values)
 def update_from_serial():
-	# update mode
-	update_mode()
 	# serial update
 	if ser_com:
 		line = ser.readline()
@@ -102,63 +95,102 @@ def update_from_serial():
 	root.after(time_space, update_from_serial)  # reschedule event in 2 seconds
 
 
-entrySett = {"font":labelFont, "width":None, "justify":CENTER, "state":"normal", "takefocus":"no", "highlightthickness":False}
-basicLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
-
-def createBasicScreen():
-	global basicLabelSett
-	# ustawienia fabryczne
-	holder1 = Label(root, width=root.winfo_screenwidth()/3)
-	holder1.grid(row=1, column=1)
-	basicLabelSett["text"]="Przywróć ustawienia fabryczne"
-	labDefSett = Label(root, basicLabelSett)
-	labDefSett.grid(row=1, column=1, sticky=W, pady=0)
-	# przycisk pierwszy, po lewej
-	basicLabelSett["text"]="przycisk pierwszy"
-	button1 = Label(root, basicLabelSett)
-	button1.grid(row=2, column=1, sticky=W, pady=30)
-	# przycisk drugi, po lewej
-	basicLabelSett["text"]="przycisk drugi"
-	button2 = Label(root, basicLabelSett)
-	button2.grid(row=3, column=1, sticky=W, pady=30)
-	# przycisk trzeci, po lewej
-	basicLabelSett["text"]="przycisk trzeci"
-	button3 = Label(root, basicLabelSett)
-	button3.grid(row=4, column=1, sticky=W, pady=30)
-
-createBasicScreen()
-
-kamv = Entry(root, entrySett)
-kamv.grid(row=2, column=1)
-hamv = Entry(root, entrySett)
-hamv.grid(row=2, column=3)
-
+# advanced widgets list
 adv_widgets = []
-adv_widgets.append(kamv)
-adv_widgets.append(hamv)
+
+# basic widgets list
+bas_widgets = []
+
+entrySett = {"font":labelFont, "width":None, "justify":CENTER, "state":"normal", "takefocus":"no", "highlightthickness":False}
+buttonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
+basicLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
+advancedLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
+
+
+global buttonLabelSett
+# ustawienia fabryczne
+buttonLabelSett["text"]="Przywróć ustawienia fabryczne"
+labDefSett = Label(root, buttonLabelSett)
+labDefSett.grid(row=1, column=1, sticky=W, padx=0)
+# przycisk pierwszy, po lewej
+buttonLabelSett["text"]="przycisk pierwszy"
+button1 = Label(root, buttonLabelSett)
+button1.grid(row=2, column=1, sticky=W, pady=30)
+# przycisk drugi, po lewej
+buttonLabelSett["text"]="przycisk drugi"
+button2 = Label(root, buttonLabelSett)
+button2.grid(row=3, column=1, sticky=W, pady=30)
+# przycisk trzeci, po lewej
+buttonLabelSett["text"]="przycisk trzeci"
+button3 = Label(root, buttonLabelSett)
+button3.grid(row=4, column=1, sticky=W, pady=30)
+
+# banner
+banner = Label(root, image=photo)
+banner.grid(row=1, column=2)
+
+# basic widgets for hiding
+basicLabelSett["text"] = "Czas trwania kroku:"
+labStepTime = Label(root, basicLabelSett)
+labStepTime.grid(row=2, column=2, sticky=E)
+
+basicLabelSett["text"] = "Amplituda kroku:"
+labStepAmp = Label(root, basicLabelSett)
+labStepAmp.grid(row=3, column=2, sticky=E)
+
+bas_widgets.append(labStepTime)
+
+# advanced widgets for hiding
+advancedLabelSett["text"] = "Amplituda biodra:"
+labHipAmp = Label(root, advancedLabelSett)
+
+advancedLabelSett["text"] = "Amplituda czegoś:"
+labMoreAmp = Label(root, advancedLabelSett)
+
+adv_widgets.append(labHipAmp)
+adv_widgets.append(labMoreAmp)
+
+
+def spawnAdvancedScreen():
+	# hide basic widgets
+	for w in bas_widgets:
+		w.grid_forget()
+		
+	# spawn advanced widgets
+	global labHipAmp
+	global labMoreAmp
+	labHipAmp.grid(row=2, column=2, sticky=E)
+	labMoreAmp.grid(row=4, column=2, sticky=E)
+
+
+def respawnBasicScreen():
+	# hide advanced widgets
+	for w in adv_widgets:
+		w.grid_forget()
+		
+	# spawn basic widgets
+	labStepTime.grid(row=2, column=2, sticky=E)
 
 def switchMode():
 	global advanced
 	if advanced:
 		advanced = False
+		respawnBasicScreen()
 	else:
 		advanced = True
+		spawnAdvancedScreen()
 
 # temp buttons for debug
 if debug:
-	exitButton = Button(root, text = "Zamknij", command=quit)
-	exitButton.grid(row=3, column=2)
+	exitButton = Button(root, text = "Zamknij", command = quit)
+	exitButton.grid(row=5, column=2)
 
-	switchButton = Button(root, text = "Zaawansowane", command=switchMode)
-	switchButton.grid(row=6, column=3)
-
-# banner
-photo = PhotoImage(file="logo.gif")
-banner = Label(root, image=photo)
-banner.grid(row=1, column=1, sticky="N", columnspan=3)
+	switchButton = Button(root, text = "Zaawansowane", command = switchMode)
+	switchButton.grid(row=5, column=3)
 
 root.title("ArduPi 0.3.2")
-#root.geometry("1000x600")
+
+#createBasicScreen()
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
