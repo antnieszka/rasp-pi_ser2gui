@@ -61,8 +61,8 @@ def update_mode():
 		for w in adv_widgets:
 			w.grid_forget()
 	else:
-		for w in adv_widgets:
-			w.grid()
+		kamv.grid(row=2, column=1, padx=entry_padx, pady=entry_pady)
+		hamv.grid(row=2, column=3, padx=entry_padx, pady=entry_pady)
 
 # updating method (checks serial for values)
 def update_from_serial():
@@ -144,6 +144,11 @@ if debug:
 
 	switchButton = Button(root, text = "Zaawansowane", command=switchMode)
 	switchButton.grid(row=6, column=3)
+
+# banner
+photo = PhotoImage(file="logo.gif")
+banner = Label(root, image=photo)
+banner.grid(row=1, column=2, sticky="N")
 
 root.title("ArduPi 0.3.2")
 #root.geometry("1000x600")
