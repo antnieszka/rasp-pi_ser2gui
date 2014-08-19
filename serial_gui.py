@@ -101,13 +101,14 @@ adv_widgets = []
 # basic widgets list
 bas_widgets = []
 
-entrySett = {"font":labelFont, "width":None, "justify":CENTER, "state":"normal", "takefocus":"no", "highlightthickness":False}
+entrySett = {"font":labelFont, "width":None, "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+basicEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+advancedEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+
 buttonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
 basicLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
 advancedLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
 
-
-global buttonLabelSett
 # ustawienia fabryczne
 buttonLabelSett["text"]="Przywróć ustawienia fabryczne"
 labDefSett = Label(root, buttonLabelSett)
@@ -138,7 +139,14 @@ basicLabelSett["text"] = "Amplituda kroku:"
 labStepAmp = Label(root, basicLabelSett)
 labStepAmp.grid(row=3, column=2, sticky=E)
 
+entStepTime = Entry(root, basicEntrySett)
+entStepTime.grid(row=2, column=3, sticky=W)
+
+entStepAmp = Entry(root, basicEntrySett)
+entStepAmp.grid(row=3, column=3, sticky=W)
+
 bas_widgets.append(labStepTime)
+bas_widgets.append(entStepTime)
 
 # advanced widgets for hiding
 advancedLabelSett["text"] = "Amplituda biodra:"
@@ -147,8 +155,14 @@ labHipAmp = Label(root, advancedLabelSett)
 advancedLabelSett["text"] = "Amplituda czegoś:"
 labMoreAmp = Label(root, advancedLabelSett)
 
+entHipAmp = Entry(root, advancedEntrySett)
+
+entMoreAmp = Entry(root, advancedEntrySett)
+
 adv_widgets.append(labHipAmp)
 adv_widgets.append(labMoreAmp)
+adv_widgets.append(entHipAmp)
+adv_widgets.append(entMoreAmp)
 
 
 def spawnAdvancedScreen():
@@ -161,6 +175,8 @@ def spawnAdvancedScreen():
 	global labMoreAmp
 	labHipAmp.grid(row=2, column=2, sticky=E)
 	labMoreAmp.grid(row=4, column=2, sticky=E)
+	entHipAmp.grid(row=2, column=3, sticky=W)
+	entMoreAmp.grid(row=4, column=3, sticky=W)
 
 
 def respawnBasicScreen():
@@ -170,6 +186,7 @@ def respawnBasicScreen():
 		
 	# spawn basic widgets
 	labStepTime.grid(row=2, column=2, sticky=E)
+	entStepTime.grid(row=2, column=3, sticky=W)
 
 def switchMode():
 	global advanced
