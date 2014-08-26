@@ -127,19 +127,19 @@ advancedLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplengt
 rightButtonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
 
 # ustawienia fabryczne
-buttonLabelSett["text"]="Przywróć ustawienia fabryczne"
+buttonLabelSett["text"]="Start"
 labDefSett = Label(root, buttonLabelSett)
 labDefSett.grid(row=1, column=1, sticky=W, padx=0)
 # przycisk pierwszy, po lewej
-buttonLabelSett["text"]="przycisk pierwszy"
+buttonLabelSett["text"]="Stop"
 button1 = Label(root, buttonLabelSett)
 button1.grid(row=2, column=1, sticky=W, pady=30)
 # przycisk drugi, po lewej
-buttonLabelSett["text"]="przycisk drugi"
+buttonLabelSett["text"]="Pauza"
 button2 = Label(root, buttonLabelSett)
 button2.grid(row=3, column=1, sticky=W, pady=30)
 # przycisk trzeci, po lewej
-buttonLabelSett["text"]="przycisk trzeci"
+buttonLabelSett["text"]="Zaawansowane"
 button3 = Label(root, buttonLabelSett)
 button3.grid(row=4, column=1, sticky=W, pady=30)
 
@@ -277,7 +277,7 @@ if debug:
 	keyButton2 = Button(wrapper, text = "Key tog", command = togKey)
 	keyButton2.grid()
 
-root.title("ArduPi 0.4.1")
+root.title("ArduPi 0.5.1")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))

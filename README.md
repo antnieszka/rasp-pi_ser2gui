@@ -1,12 +1,14 @@
 ###TO DO:
-- zmiania sygnalow - mamy teraz oddzielne dla guzikow i wartosci amplitud
 - czytanie UART
-- miejsce na logo
-- nowe okienko/widok zaawansowany
-- panel etykiet po lewej stronie obu okien/widokow
-- tablica lub inna struktura przechowujaca wartosci parametrow oraz stany przyciskow
 - podswietlenie lub inny podobny sygnal w momencie zmieny wartosci -> update tylko jesli sie zmienily wzgledem ostatniego stau trzymanego w tablicy
 - szare pola dla zablokowanych pol (ktorych nie mozna modyfikowac)
+
+###ver 0.5.1:
+- chwilowe kocie logo
+- widok zaawansowany i podstawowy
+- okno czekajace na autoryzacje i blokujace w tym czasie glowne
+- slownik przechowujacy wartosci parametrow oraz stany przyciskow
+- panele etykiet do przyciskow po prawej i lewej stronie okna
 
 ###ver 0.4.1:
 - dwa tryby - zwykly i zaawansowany
