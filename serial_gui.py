@@ -17,8 +17,9 @@ if debug: print("imports done!")
 
 # serial settings
 serial_bauds = 9600
-serial_port = '/dev/ttyACM0'
-serial_pattern = re.compile("\\w\\w\\w\\ \\dx\\d{4}")
+serial_port = '/dev/ttyAMA0'
+serial_pattern = re.compile("\\w{3,4}\\ \\dx\\d{4}")
+serial_key = re.compile("KEY\\ \\w{2,3}")
 
 # advanced mode
 advanced = False
@@ -37,7 +38,8 @@ serial_table = {
 	"KAMP":"",
 	"HAMP":"",
 	"AAMP":"",
-	"GPER":""
+	"GPER":"",
+	"GAMP":""
 }
 
 
@@ -48,6 +50,11 @@ if ser_com:
 # Main window
 root = Tk()
 
+winWid = root.winfo_screenwidth()
+winHei = root.winfo_screenheight()
+
+wrapper = Tk()
+
 # banner
 photo = PhotoImage(file="logo.gif")
 
@@ -57,41 +64,50 @@ time_space = 100
 # font for labels
 labelFont = tkFont.Font(family = "Georgia", size = 32)
 
-
+# key code for showing different windows
+KeyCode = False
 
 # updating method (checks serial for values)
 def update_from_serial():
 	# serial update
-	if ser_com:
-		line = ser.readline()
-		if debug: print 'raw: ' + line
-		match = serial_pattern.findall(line)
-		if debug:
+	
+	if KeyCode:
+		# key ON
+		print 'fuck'
+		if ser_com:
+			line = ser.readline()
+			if debug: print 'raw: ' + line
+			match = serial_pattern.findall(line)
+			if debug:
+				for e in match:
+					print "recieved: " + e
+					
+			# update gui values
 			for e in match:
-				print "recieved: " + e
-				
-		# update gui values
-		for e in match:
-			if e[0:3] == 'kam':
-				print 'Got KAM with value: ' + e[4:10]
-				#kam['text'] = e[4:10]
-				kamv.delete(0, END)
-				kamv.insert(0, e[4:10])
-			elif e[0:3] == 'ham':
-				print 'Got HAM with value: ' + e[4:10]
-				#ham['text'] = e[4:10]
-				hamv.delete(0, END)
-				hamv.insert(0, e[4:10])
-			elif e[0:3] == 'kwz':
-				print 'Got KWZ with value: ' + e[4:10]
-				#kwz['text'] = e[4:10]
-				kwzv.delete(0, END)
-				kwzv.insert(0, e[4:10])
-			elif e[0:3] == 'hwz':
-				print 'Got HWZ with value: ' + e[4:10]
-				#hwz['text'] = e[4:10]
-				hwzv.delete(0, END)
-				hwzv.insert(0, e[4:10])
+				if e[0:3] == 'kam':
+					print 'Got KAM with value: ' + e[4:10]
+					#kam['text'] = e[4:10]
+					kamv.delete(0, END)
+					kamv.insert(0, e[4:10])
+				elif e[0:3] == 'ham':
+					print 'Got HAM with value: ' + e[4:10]
+					#ham['text'] = e[4:10]
+					hamv.delete(0, END)
+					hamv.insert(0, e[4:10])
+				elif e[0:3] == 'kwz':
+					print 'Got KWZ with value: ' + e[4:10]
+					#kwz['text'] = e[4:10]
+					kwzv.delete(0, END)
+					kwzv.insert(0, e[4:10])
+				elif e[0:3] == 'hwz':
+					print 'Got HWZ with value: ' + e[4:10]
+					#hwz['text'] = e[4:10]
+					hwzv.delete(0, END)
+					hwzv.insert(0, e[4:10])
+					
+	else:
+		# key OFF
+		print 'nope'
 	root.after(time_space, update_from_serial)  # reschedule event in 2 seconds
 
 
@@ -108,6 +124,7 @@ advancedEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"di
 buttonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
 basicLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
 advancedLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
+rightButtonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
 
 # ustawienia fabryczne
 buttonLabelSett["text"]="Przywróć ustawienia fabryczne"
@@ -126,9 +143,32 @@ buttonLabelSett["text"]="przycisk trzeci"
 button3 = Label(root, buttonLabelSett)
 button3.grid(row=4, column=1, sticky=W, pady=30)
 
+
+# przycisk pierwszy po prawej
+rightButtonLabelSett["text"]="GPER+"
+labGperPlus = Label(root, rightButtonLabelSett)
+labGperPlus.grid(row=1, column=4, sticky=E)
+# przycisk drugi po prawej
+rightButtonLabelSett["text"]="GPER-"
+labGperMinus = Label(root, rightButtonLabelSett)
+labGperMinus.grid(row=2, column=4, sticky=E)
+#przycisk trzeci po prawej
+rightButtonLabelSett["text"]="GAMP+"
+labGampPlus = Label(root, rightButtonLabelSett)
+labGampPlus.grid(row=3, column=4, sticky=E)
+# przycisk czwarty po prawej
+rightButtonLabelSett["text"]="GAMP-"
+labGampMinus = Label(root, rightButtonLabelSett)
+labGampMinus.grid(row=4, column=4, sticky=E)
+
 # banner
 banner = Label(root, image=photo)
 banner.grid(row=1, column=2)
+
+basicLabelSett["text"] = "Koteł przeprasza :< Tu nie ma niczego..."
+labStepTime = Label(wrapper, basicLabelSett)
+labStepTime.grid(row=1, column=2)
+
 
 # basic widgets for hiding
 basicLabelSett["text"] = "Czas trwania kroku:"
@@ -197,21 +237,54 @@ def switchMode():
 		advanced = True
 		spawnAdvancedScreen()
 
+def togKey():
+	global KeyCode
+	if KeyCode:
+		KeyCode = False
+	else:
+		KeyCode = True
+	print KeyCode
+
+def showRoot():
+	wrapper.withdraw()
+	root.overrideredirect(True)
+	root.geometry("{0}x{1}+0+0".format(winWid, winHei))
+	root.after(time_space, update_from_serial)
+	root.update()
+	root.deiconify()
+	
+def showWrapper():
+	root.withdraw()
+	wrapper.overrideredirect(True)
+	wrapper.geometry("{0}x{1}+0+0".format(winWid, winHei))
+	wrapper.update()
+	wrapper.deiconify()
+
 # temp buttons for debug
 if debug:
-	exitButton = Button(root, text = "Zamknij", command = quit)
+	exitButton = Button(root, text = "Zamknij", command = showWrapper)
 	exitButton.grid(row=5, column=2)
+	
+	exitButtonWr = Button(wrapper, text = "Zamknij", command = showRoot)
+	exitButtonWr.grid()
 
 	switchButton = Button(root, text = "Zaawansowane", command = switchMode)
 	switchButton.grid(row=5, column=3)
+	
+	keyButton = Button(root, text = "Key tog", command = togKey)
+	keyButton.grid(row=5, column=4)
+	
+	keyButton2 = Button(wrapper, text = "Key tog", command = togKey)
+	keyButton2.grid()
 
 root.title("ArduPi 0.4.1")
 
-#createBasicScreen()
-
 root.overrideredirect(True)
-root.geometry("{0}x{1}+0+0".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-
+root.geometry("{0}x{1}+0+0".format(winWid, winHei))
 root.after(time_space, update_from_serial)
-#root.bind("<Escape>", quit)
+root.withdraw()
+wrapper.overrideredirect(True)
+wrapper.geometry("{0}x{1}+0+0".format(winWid, winHei))
+
+wrapper.mainloop()
 root.mainloop()
