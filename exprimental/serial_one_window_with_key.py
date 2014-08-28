@@ -286,7 +286,7 @@ if debug:
 	closeB = Button(wrapper, text = "Annihilate", command = exit)
 	closeB.grid(row=5, column=2)
 
-root.title("ArduPi 0.5.1")
+root.title("ArduPi 0.5.2")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))

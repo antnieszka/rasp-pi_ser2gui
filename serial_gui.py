@@ -50,19 +50,16 @@ if ser_com:
 # Main window
 root = Tk()
 
-winWid = root.winfo_screenwidth()
-winHei = root.winfo_screenheight()
+winWid = 800 #root.winfo_screenwidth()
+winHei = 600 #root.winfo_screenheight()
 
 wrapper = Tk()
-
-# banner
-photo = PhotoImage(file="logo.gif")
 
 # intervals between updating variables from serial
 time_space = 100
 
 # font for labels
-labelFont = tkFont.Font(family = "Georgia", size = 32)
+labelFont = tkFont.Font(family = "Georgia", size = 24)
 
 # key code for showing different windows
 KeyCode = False
@@ -108,7 +105,7 @@ def update_from_serial():
 	else:
 		# key OFF
 		print 'nope'
-	root.after(time_space, update_from_serial)  # reschedule event in 2 seconds
+	root.after(time_space, update_from_serial)  # reschedule event in time_space
 
 
 # advanced widgets list
@@ -117,58 +114,66 @@ adv_widgets = []
 # basic widgets list
 bas_widgets = []
 
-entrySett = {"font":labelFont, "width":None, "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
-basicEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
-advancedEntrySett = {"font":labelFont, "width":"10", "justify":LEFT, "state":"disabled", "takefocus":"no", "highlightthickness":False}
+#entrySett = {"font":labelFont, "width":None, "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+basicEntrySett = {"font":labelFont, "width":"6", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+advancedEntrySett = {"font":labelFont, "width":"6", "justify":LEFT, "state":"disabled", "takefocus":"no", "highlightthickness":False}
 
-buttonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
-basicLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
-advancedLabelSett = {"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"}
-rightButtonLabelSett = {"font":labelFont, "width":None, "justify":LEFT, "wraplength":"300"}
+buttonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
+basicLabelSett = {"font":labelFont, "width":18, "justify":RIGHT, "wraplength":"500"}
+advancedLabelSett = {"font":labelFont, "width":18, "justify":RIGHT, "wraplength":"500"}
+rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
 
-# ustawienia fabryczne
-buttonLabelSett["text"]="Start"
-labDefSett = Label(root, buttonLabelSett)
-labDefSett.grid(row=1, column=1, sticky=W, padx=0)
-# przycisk pierwszy, po lewej
-buttonLabelSett["text"]="Stop"
+# label for button 0 on the left
+buttonLabelSett["text"]="START "
+button0 = Label(root, buttonLabelSett)
+button0.grid(row=1, column=1, sticky=W, pady=50)
+# label for button 1 on the left
+buttonLabelSett["text"]="STOP   "
 button1 = Label(root, buttonLabelSett)
-button1.grid(row=2, column=1, sticky=W, pady=30)
-# przycisk drugi, po lewej
-buttonLabelSett["text"]="Pauza"
+button1.grid(row=2, column=1, sticky=W, pady=50)
+# label for button 2 on the left
+buttonLabelSett["text"]="PAUZA "
 button2 = Label(root, buttonLabelSett)
-button2.grid(row=3, column=1, sticky=W, pady=30)
-# przycisk trzeci, po lewej
-buttonLabelSett["text"]="Zaawansowane"
+button2.grid(row=3, column=1, sticky=W, pady=50)
+# label for button 3 on the left
+buttonLabelSett["text"]="ADV    "
 button3 = Label(root, buttonLabelSett)
-button3.grid(row=4, column=1, sticky=W, pady=30)
+button3.grid(row=4, column=1, sticky=W, pady=50)
 
 
-# przycisk pierwszy po prawej
+# label for button 0 on the right
 rightButtonLabelSett["text"]="GPER+"
 labGperPlus = Label(root, rightButtonLabelSett)
 labGperPlus.grid(row=1, column=4, sticky=E)
-# przycisk drugi po prawej
+# label for button 1 on the right
 rightButtonLabelSett["text"]="GPER-"
 labGperMinus = Label(root, rightButtonLabelSett)
 labGperMinus.grid(row=2, column=4, sticky=E)
-#przycisk trzeci po prawej
+# label for button 2 on the right
 rightButtonLabelSett["text"]="GAMP+"
 labGampPlus = Label(root, rightButtonLabelSett)
 labGampPlus.grid(row=3, column=4, sticky=E)
-# przycisk czwarty po prawej
+# label for button 3 on the right
 rightButtonLabelSett["text"]="GAMP-"
 labGampMinus = Label(root, rightButtonLabelSett)
 labGampMinus.grid(row=4, column=4, sticky=E)
 
-# banner
+# banner for main window
+photo = PhotoImage(file="logo_small.gif")
 banner = Label(root, image=photo)
-banner.grid(row=1, column=2)
+banner.image = photo
+banner.grid(row=1, column=2, columnspan=2)
 
-basicLabelSett["text"] = "Koteł przeprasza :< Tu nie ma niczego..."
-labStepTime = Label(wrapper, basicLabelSett)
-labStepTime.grid(row=1, column=2)
+# info for keyCode block window
+labStepTime = Label(wrapper, {"text":"Koteł przeprasza :< Trwają prace konserwatorskie...", \
+"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"})
+labStepTime.grid(row=2, column=2, pady=20)
 
+# banner
+ph2 = PhotoImage(master=wrapper, file="lol.gif")
+ban2 = Label(wrapper, image=ph2)
+ban2.image = ph2
+ban2.grid(row=1, column=2, padx=150, pady=100)
 
 # basic widgets for hiding
 basicLabelSett["text"] = "Czas trwania kroku:"
@@ -262,22 +267,25 @@ def showWrapper():
 
 # temp buttons for debug
 if debug:
-	exitButton = Button(root, text = "Zamknij", command = showWrapper)
+	exitButton = Button(root, text = "Toggle view", command = showWrapper)
 	exitButton.grid(row=5, column=2)
 	
-	exitButtonWr = Button(wrapper, text = "Zamknij", command = showRoot)
-	exitButtonWr.grid()
+	exitButtonWr = Button(wrapper, text = "Toggle view", command = showRoot)
+	exitButtonWr.grid(row=3, column=2)
 
-	switchButton = Button(root, text = "Zaawansowane", command = switchMode)
+	switchButton = Button(root, text = "Advanced", command = switchMode)
 	switchButton.grid(row=5, column=3)
 	
-	keyButton = Button(root, text = "Key tog", command = togKey)
+	keyButton = Button(root, text = "Toggle key", command = togKey)
 	keyButton.grid(row=5, column=4)
 	
-	keyButton2 = Button(wrapper, text = "Key tog", command = togKey)
-	keyButton2.grid()
+	keyButton2 = Button(wrapper, text = "Toggle key", command = togKey)
+	keyButton2.grid(row=4, column=2)
+	
+	closeB = Button(wrapper, text = "Annihilate", command = exit)
+	closeB.grid(row=5, column=2)
 
-root.title("ArduPi 0.5.1")
+root.title("ArduPi 0.5.2")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))

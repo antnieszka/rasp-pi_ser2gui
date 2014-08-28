@@ -1,7 +1,14 @@
 ###TO DO:
-- czytanie UART
+- czytanie konkretnych sygnałów po serialu
 - podswietlenie lub inny podobny sygnal w momencie zmieny wartosci -> update tylko jesli sie zmienily wzgledem ostatniego stau trzymanego w tablicy
 - szare pola dla zablokowanych pol (ktorych nie mozna modyfikowac)
+
+###ver 0.5.2:
+- rozwiązane problemy z PhotoImage w trybie zablokowanym
+- kocie logo i informacja o blokadzie
+- wyrownanie przyciskow i przystosowanie obu widoków do docelowej
+rozdzielczości 800x600
+- dodatkowe przyciski kategorii debug
 
 ###ver 0.5.1:
 - chwilowe kocie logo
