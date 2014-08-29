@@ -1,7 +1,8 @@
-###TO DO:
+###ver 0.6.1:
 - czytanie konkretnych sygnałów po serialu
 - podswietlenie lub inny podobny sygnal w momencie zmieny wartosci -> update tylko jesli sie zmienily wzgledem ostatniego stau trzymanego w tablicy
-- szare pola dla zablokowanych pol (ktorych nie mozna modyfikowac)
+- oddzielny wątek do czytania kilku ostatnich komunikatów z seriala
+- sprawdzone działanie z zewnetrzną klawiaturką
 
 ###ver 0.5.2:
 - rozwiązane problemy z PhotoImage w trybie zablokowanym

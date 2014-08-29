@@ -6,7 +6,6 @@ from Tkinter import *
 from time import sleep, time
 import re
 import tkFont
-from threading import Thread
 
 # set to True for debug messages
 debug = False
@@ -20,16 +19,23 @@ if debug: print("imports done!")
 # serial settings
 serial_bauds = 57600#9600
 serial_port = '/dev/ttyACM0'#'/dev/ttyAMA0'
-serial_pattern = re.compile("\\w{4}\\ \\dx\\d{4}")
+serial_pattern = re.compile("\\w{3,4}\\ \\dx\\d{4}")
+serial_key = re.compile("KEY\\ \\w{2,3}")
 
 # advanced mode
 advanced = False
 
-# iterations with entry backgroud lit after updating its value
-lightUpTime = 5
-
 # holds button states and amp values
 serial_table = {
+	"BTT1":0,
+	"BTT2":0,
+	"BTT3":0,
+	"BTT4":0,
+	"BTT5":0,
+	"BTT6":0,
+	"BTT7":0,
+	"BTT8":0,
+	"BTT9":0,
 	"KAMP":"",
 	"HAMP":"",
 	"AAMP":"",
@@ -51,88 +57,81 @@ winHei = 480 #root.winfo_screenheight()
 wrapper = Tk()
 
 # intervals between updating variables from serial
-time_space = 50
+time_space = 100
 
 # font for labels
 labelFont = tkFont.Font(family = "Georgia", size = 18)
 
 # key code for showing different windows
 KeyCode = True
-threadWork = True
 
 last_received = ''
-
 def receiving(ser):
-    global last_received, threadWork
+    #global last_received
 
     buffer = ''
-    while threadWork:
+    while True:
         buffer = buffer + ser.read(ser.inWaiting())
         if '\n' in buffer:
-            lines = buffer.split('\n')
+            lines = buffer.split('\n') # Guaranteed to have at least 2 entries
             if lines[-2]: last_received = lines[-2]
             buffer = lines[-1]
-            #sleep(0.1)
-            
-ser_th = Thread(target=receiving, args=(ser,)).start()
-
-# helper counters for entry bg lightup
-gpert = 0
-gampt = 0
 
 # updating method (checks serial for values)
 def update_from_serial():
 	# serial update
+	
 	if KeyCode:
 		# key ON
-		global last_received, gampt, gpert
-		e = last_received[1:12]
-		if e[0:5] == 'GPER ':
-			if serial_table["GPER"] <> e[5:11]:
-				entStepTime['background'] = 'grey'
-				gpert = lightUpTime
-				serial_table["GPER"] = e[5:11]
-			print '>>>>>>>>>>>Got GPER with value: ' + e[5:11]
-			#entStepTime.delete(0, END)
-			#entStepTime.insert(0, e[5:11])
-		elif e[0:5] == 'GAMP ':
-			if serial_table["GAMP"] <> e[5:11]:
-				entStepAmp['background'] = 'grey'
-				gampt = lightUpTime
-				serial_table["GAMP"] = e[5:11]
-			print 'Got GAMP with value: ' + e[5:11]
-			#entStepAmp.delete(0, END)
-			#entStepAmp.insert(0, e[5:11])
-		elif e[0:4] == 'KAMP':
-			print 'Got KAMP with value: ' + e[5:11]
-			entMoreAmp.delete(0, END)
-			entMoreAmp.insert(0, e[5:11])
-		elif e[0:4] == 'HAMP':
-			print 'Got HAMP with value: ' + e[5:11]
-			entHipAmp.delete(0, END)
-			entHipAmp.insert(0, e[5:11])
-		elif e[0:4] == 'AAMP':
-			print 'Got AAMP with value: ' + e[5:11]
-			#TODO: # brak pola?
-			#entHipAmp.delete(0, END)
-			#entHipAmp.insert(0, e[5:11])
-		else:
-			pass
-		if gpert > 0:
-			gpert -= 1
-		else:
-			entStepTime['background'] = 'white'
-		if gampt > 0:
-			gampt -= 1
-		else:
-			entStepAmp['background'] = 'white'
+		global last_received
+		buffer = ''
+		if debug: print 'yep'
+		if ser_com:
+			buffer = buffer + ser.read(ser.inWaiting())
+			if '\n' in buffer:
+				lines = buffer.split('\n') # Guaranteed to have at least 2 entries
+				last_received = lines[-2]
+				print last_received
+				buffer = lines[-1]
+			#line = ser.readline()
+			#if 1: print 'raw: ' + line
+			#match = serial_pattern.findall(line)
+			if 0:
+				for e in match:
+					print "recieved: " + e
+					
+			# update gui values
+			for e in last_received:
+				if e[0:4] == 'GPER':
+					print '>>>>>>>>>>>Got GPER with value: ' + e[5:11]
+					serial_table["GPER"] = e[5:11]
+					#entStepTime.delete(0, END)
+					#entStepTime.insert(0, e[5:11])
+				elif e[0:4] == 'GAMP':
+					print 'Got GAMP with value: ' + e[5:11]
+					entStepAmp.delete(0, END)
+					entStepAmp.insert(0, e[5:11])
+				elif e[0:4] == 'KAMP':
+					print 'Got KAMP with value: ' + e[5:11]
+					entMoreAmp.delete(0, END)
+					entMoreAmp.insert(0, e[5:11])
+				elif e[0:4] == 'HAMP':
+					print 'Got HAMP with value: ' + e[5:11]
+					entHipAmp.delete(0, END)
+					entHipAmp.insert(0, e[5:11])
+				elif e[0:4] == 'AAMP':
+					print 'Got AAMP with value: ' + e[5:11]
+					#TODO: # brak pola?
+					#entHipAmp.delete(0, END)
+					#entHipAmp.insert(0, e[5:11])
+				else:
+					pass
+					
 	else:
 		# key OFF
 		if debug: print 'nope'
 	entStepTime.delete(0, END)
 	entStepTime.insert(0, serial_table["GPER"])
-	entStepAmp.delete(0, END)
-	entStepAmp.insert(0, serial_table["GAMP"])
 	root.after(time_space, update_from_serial)  # reschedule event in time_space
 
 
@@ -143,8 +142,8 @@ adv_widgets = []
 bas_widgets = []
 
 #entrySett = {"font":labelFont, "width":None, "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
-basicEntrySett = {"font":labelFont, "width":"7", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
-advancedEntrySett = {"font":labelFont, "width":"7", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+basicEntrySett = {"font":labelFont, "width":"6", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
+advancedEntrySett = {"font":labelFont, "width":"6", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
 
 buttonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
 basicLabelSett = {"font":labelFont, "width":18, "justify":RIGHT, "wraplength":"500"}
@@ -293,11 +292,6 @@ def showWrapper():
 	wrapper.update()
 	wrapper.deiconify()
 
-def killall():
-	global threadWork
-	threadWork = False
-	sys.exit()
-
 # temp buttons for debug
 if key_debug:
 	exitButton = Button(root, text = "Toggle view", command = showWrapper)
@@ -315,10 +309,10 @@ if key_debug:
 	keyButton2 = Button(wrapper, text = "Toggle key", command = togKey)
 	keyButton2.grid(row=4, column=2)
 	
-	closeB = Button(wrapper, text = "Annihilate", command = killall)
+	closeB = Button(wrapper, text = "Annihilate", command = exit)
 	closeB.grid(row=5, column=2)
 
-root.title("ArduPi 0.6.1")
+root.title("ArduPi 0.5.2")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))
