@@ -13,7 +13,7 @@ debug = False
 key_debug = True
 
 # set to True for serial communication
-ser_com = True
+ser_com = False
 
 if debug: print("imports done!")
 
@@ -45,21 +45,28 @@ if ser_com:
 # Main window
 root = Tk()
 
+# backgroud
+background_image = PhotoImage(file="back.gif")
+background_label = Label(root, image=background_image)
+background_label.photo = background_image
+background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 winWid = 640 #root.winfo_screenwidth()
 winHei = 480 #root.winfo_screenheight()
 
 wrapper = Tk()
 
 # intervals between updating variables from serial
-time_space = 50
+time_space = 25
 
 # font for labels
 labelFont = tkFont.Font(family = "Georgia", size = 18)
 
 # key code for showing different windows
 KeyCode = True
+# switch killing serial thread
 threadWork = True
-
+# laste received message on serial port
 last_received = ''
 
 def receiving(ser):
@@ -72,9 +79,10 @@ def receiving(ser):
             lines = buffer.split('\n')
             if lines[-2]: last_received = lines[-2]
             buffer = lines[-1]
-            #sleep(0.1)
+            sleep(0.01)
             
-ser_th = Thread(target=receiving, args=(ser,)).start()
+if ser_com:
+	ser_th = Thread(target=receiving, args=(ser,)).start()
 
 # helper counters for entry bg lightup
 gpert = 0
@@ -201,7 +209,7 @@ labStepTime.grid(row=2, column=2, pady=20)
 ph2 = PhotoImage(master=wrapper, file="lol.gif")
 ban2 = Label(wrapper, image=ph2)
 ban2.image = ph2
-ban2.grid(row=1, column=2, padx=100, pady=50)
+ban2.grid(row=1, column=2, padx=70, pady=50)
 
 # basic widgets for hiding
 basicLabelSett["text"] = "Czas trwania kroku:"
