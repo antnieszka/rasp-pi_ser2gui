@@ -60,7 +60,7 @@ wrapper = Tk()
 time_space = 25
 
 # font for labels
-labelFont = tkFont.Font(family = "Georgia", size = 18)
+labelFont = tkFont.Font(family = "Georgia", size = 16)
 
 # key code for showing different windows
 KeyCode = True
@@ -155,42 +155,44 @@ basicEntrySett = {"font":labelFont, "width":"7", "justify":LEFT, "state":"normal
 advancedEntrySett = {"font":labelFont, "width":"7", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
 
 buttonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
-basicLabelSett = {"font":labelFont, "width":18, "justify":RIGHT, "wraplength":"500"}
+basicLabelSett = {"font":labelFont, "width":24, "justify":RIGHT, "wraplength":"500"}
 advancedLabelSett = {"font":labelFont, "width":18, "justify":RIGHT, "wraplength":"500"}
 rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
+
+padYLabel = 36
 
 # label for button 0 on the left
 buttonLabelSett["text"]="START "
 button0 = Label(root, buttonLabelSett)
-button0.grid(row=1, column=1, sticky=W, pady=32)
+button0.grid(row=1, column=1, sticky=W, pady=padYLabel)
 # label for button 1 on the left
 buttonLabelSett["text"]="STOP   "
 button1 = Label(root, buttonLabelSett)
-button1.grid(row=2, column=1, sticky=W, pady=32)
+button1.grid(row=2, column=1, sticky=W, pady=padYLabel)
 # label for button 2 on the left
 buttonLabelSett["text"]="PAUZA "
 button2 = Label(root, buttonLabelSett)
-button2.grid(row=3, column=1, sticky=W, pady=32)
+button2.grid(row=3, column=1, sticky=W, pady=padYLabel)
 # label for button 3 on the left
-buttonLabelSett["text"]="ADV    "
+buttonLabelSett["text"]="ZAAWA."
 button3 = Label(root, buttonLabelSett)
-button3.grid(row=4, column=1, sticky=W, pady=32)
+button3.grid(row=4, column=1, sticky=W, pady=padYLabel)
 
 
 # label for button 0 on the right
-rightButtonLabelSett["text"]="GPER+"
+rightButtonLabelSett["text"]=u"wybór "+u"\u21E7"
 labGperPlus = Label(root, rightButtonLabelSett)
 labGperPlus.grid(row=1, column=4, sticky=E)
 # label for button 1 on the right
-rightButtonLabelSett["text"]="GPER-"
+rightButtonLabelSett["text"]=u"wybór "+u"\u21E9"
 labGperMinus = Label(root, rightButtonLabelSett)
 labGperMinus.grid(row=2, column=4, sticky=E)
 # label for button 2 on the right
-rightButtonLabelSett["text"]="GAMP+"
+rightButtonLabelSett["text"]=u"wzm. "+u"\u21E7"
 labGampPlus = Label(root, rightButtonLabelSett)
 labGampPlus.grid(row=3, column=4, sticky=E)
 # label for button 3 on the right
-rightButtonLabelSett["text"]="GAMP-"
+rightButtonLabelSett["text"]=u"wzm. "+u"\u21E9"
 labGampMinus = Label(root, rightButtonLabelSett)
 labGampMinus.grid(row=4, column=4, sticky=E)
 
@@ -198,7 +200,7 @@ labGampMinus.grid(row=4, column=4, sticky=E)
 photo = PhotoImage(file="logo_small.gif")
 banner = Label(root, image=photo)
 banner.image = photo
-banner.grid(row=1, column=2, columnspan=2)
+#banner.grid(row=1, column=2, columnspan=2)
 
 # info for keyCode block window
 labStepTime = Label(wrapper, {"text":"Koteł przeprasza :< Trwają prace konserwatorskie...", \
@@ -212,11 +214,11 @@ ban2.image = ph2
 ban2.grid(row=1, column=2, padx=70, pady=50)
 
 # basic widgets for hiding
-basicLabelSett["text"] = "Czas trwania kroku:"
+basicLabelSett["text"] = "Czas trwania kroku (Tk):"
 labStepTime = Label(root, basicLabelSett)
 labStepTime.grid(row=2, column=2, sticky=E)
 
-basicLabelSett["text"] = "Amplituda kroku:"
+basicLabelSett["text"] = "Wzmocnienie kroku (Wk):"
 labStepAmp = Label(root, basicLabelSett)
 labStepAmp.grid(row=3, column=2, sticky=E)
 
@@ -230,10 +232,12 @@ bas_widgets.append(labStepTime)
 bas_widgets.append(entStepTime)
 
 # advanced widgets for hiding
-advancedLabelSett["text"] = "Amplituda biodra:"
+advancedLabelSett["text"] = "Wzmocnienie stawu biodrowego:"
 labHipAmp = Label(root, advancedLabelSett)
+# wzmocnienie stawu kolanowego
+advancedLabelSett["text"] = "Wzmocnienie stawu kolanowego:"
 
-advancedLabelSett["text"] = "Amplituda łokcia:"
+advancedLabelSett["text"] = "Wzmocnienie stawu skokowego:"
 labMoreAmp = Label(root, advancedLabelSett)
 
 entHipAmp = Entry(root, advancedEntrySett)
