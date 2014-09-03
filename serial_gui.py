@@ -10,10 +10,12 @@ from threading import Thread
 
 # set to True for debug messages
 debug = False
-key_debug = True
+key_debug = False
+anihi_key = True
+spam_serial = True
 
 # set to True for serial communication
-ser_com = False
+ser_com = True
 
 if debug: print("imports done!")
 
@@ -60,7 +62,7 @@ wrapper = Tk()
 time_space = 25
 
 # font for labels
-labelFont = tkFont.Font(family = "Georgia", size = 16)
+labelFont = tkFont.Font(family = "Georgia", size = 14)
 
 # key code for showing different windows
 KeyCode = True
@@ -84,20 +86,43 @@ def receiving(ser):
 if ser_com:
 	ser_th = Thread(target=receiving, args=(ser,)).start()
 
+# lightup color
+lightUpColour = 'grey'
+
 # helper counters for entry bg lightup
 gpert = 0
 gampt = 0
+kampt = 0
+aampt = 0
+hampt = 0
 
 # updating method (checks serial for values)
 def update_from_serial():
 	# serial update
-	if KeyCode:
+	if spam_serial:
 		# key ON
-		global last_received, gampt, gpert
+		global last_received
+		global gampt, gpert, hampt, kampt, aampt
 		e = last_received[1:12]
-		if e[0:5] == 'GPER ':
+		if e[0:5] == 'KEY 0':
+			print "-------" + e[9:10]
+			if e[9:10] == '0':
+				setKey(False)
+				showWrapper()
+			else:
+			#elif e[9:10] == '1':
+				setKey(True)
+				showRoot()
+
+	if KeyCode:
+		if e[0:3] == 'ADV':
+			if e[9:10] == '0':
+				setMode(False)
+			else:
+				setMode(True)
+		elif e[0:5] == 'GPER ':
 			if serial_table["GPER"] <> e[5:11]:
-				entStepTime['background'] = 'grey'
+				entStepTime['background'] = lightUpColour
 				gpert = lightUpTime
 				serial_table["GPER"] = e[5:11]
 			print '>>>>>>>>>>>Got GPER with value: ' + e[5:11]
@@ -105,25 +130,36 @@ def update_from_serial():
 			#entStepTime.insert(0, e[5:11])
 		elif e[0:5] == 'GAMP ':
 			if serial_table["GAMP"] <> e[5:11]:
-				entStepAmp['background'] = 'grey'
+				entStepAmp['background'] = lightUpColour
 				gampt = lightUpTime
 				serial_table["GAMP"] = e[5:11]
 			print 'Got GAMP with value: ' + e[5:11]
 			#entStepAmp.delete(0, END)
 			#entStepAmp.insert(0, e[5:11])
 		elif e[0:4] == 'KAMP':
+			if serial_table["KAMP"] <> e[5:11]:
+				entKneeAmp['background'] = lightUpColour
+				kampt = lightUpTime
+				serial_table["KAMP"] = e[5:11]
 			print 'Got KAMP with value: ' + e[5:11]
-			entMoreAmp.delete(0, END)
-			entMoreAmp.insert(0, e[5:11])
+			#entKneeAmp.delete(0, END)
+			#entKneeAmp.insert(0, e[5:11])
 		elif e[0:4] == 'HAMP':
+			if serial_table["HAMP"] <> e[5:11]:
+				entHipAmp['background'] = lightUpColour
+				hampt = lightUpTime
+				serial_table["HAMP"] = e[5:11]
 			print 'Got HAMP with value: ' + e[5:11]
-			entHipAmp.delete(0, END)
-			entHipAmp.insert(0, e[5:11])
-		elif e[0:4] == 'AAMP':
-			print 'Got AAMP with value: ' + e[5:11]
-			#TODO: # brak pola?
 			#entHipAmp.delete(0, END)
 			#entHipAmp.insert(0, e[5:11])
+		elif e[0:4] == 'AAMP':
+			if serial_table["AAMP"] <> e[5:11]:
+				entAnkAmp['background'] = lightUpColour
+				aampt = lightUpTime
+				serial_table["AAMP"] = e[5:11]
+			print 'Got AAMP with value: ' + e[5:11]
+			#entAnkAmp.delete(0, END)
+			#entAnkAmp.insert(0, e[5:11])
 		else:
 			pass
 		if gpert > 0:
@@ -134,13 +170,33 @@ def update_from_serial():
 			gampt -= 1
 		else:
 			entStepAmp['background'] = 'white'
+		if hampt > 0:
+			hampt -= 1
+		else:
+			entHipAmp['background'] = 'white'
+		if aampt > 0:
+			aampt -= 1
+		else:
+			entAnkAmp['background'] = 'white'
+		if kampt > 0:
+			kampt -= 1
+		else:
+			entKneeAmp['background'] = 'white'
 	else:
 		# key OFF
 		if debug: print 'nope'
+		
+	# value update for gui
 	entStepTime.delete(0, END)
 	entStepTime.insert(0, serial_table["GPER"])
 	entStepAmp.delete(0, END)
 	entStepAmp.insert(0, serial_table["GAMP"])
+	entHipAmp.delete(0, END)
+	entHipAmp.insert(0, serial_table["HAMP"])
+	entKneeAmp.delete(0, END)
+	entKneeAmp.insert(0, serial_table["KAMP"])
+	entAnkAmp.delete(0, END)
+	entAnkAmp.insert(0, serial_table["AAMP"])
 	root.after(time_space, update_from_serial)  # reschedule event in time_space
 
 
@@ -155,8 +211,8 @@ basicEntrySett = {"font":labelFont, "width":"7", "justify":LEFT, "state":"normal
 advancedEntrySett = {"font":labelFont, "width":"7", "justify":LEFT, "state":"normal", "takefocus":"no", "highlightthickness":False}
 
 buttonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
-basicLabelSett = {"font":labelFont, "width":24, "justify":RIGHT, "wraplength":"500"}
-advancedLabelSett = {"font":labelFont, "width":18, "justify":RIGHT, "wraplength":"500"}
+basicLabelSett = {"font":labelFont, "width":29, "justify":RIGHT, "wraplength":"500"}
+advancedLabelSett = {"font":labelFont, "width":29, "justify":RIGHT, "wraplength":"500"}
 rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
 
 padYLabel = 36
@@ -197,9 +253,9 @@ labGampMinus = Label(root, rightButtonLabelSett)
 labGampMinus.grid(row=4, column=4, sticky=E)
 
 # banner for main window
-photo = PhotoImage(file="logo_small.gif")
-banner = Label(root, image=photo)
-banner.image = photo
+#photo = PhotoImage(file="logo_small.gif")
+#banner = Label(root, image=photo)
+#banner.image = photo
 #banner.grid(row=1, column=2, columnspan=2)
 
 # info for keyCode block window
@@ -230,48 +286,68 @@ entStepAmp.grid(row=3, column=3, sticky=W)
 
 bas_widgets.append(labStepTime)
 bas_widgets.append(entStepTime)
+bas_widgets.append(labStepAmp)
+bas_widgets.append(entStepAmp)
 
 # advanced widgets for hiding
 advancedLabelSett["text"] = "Wzmocnienie stawu biodrowego:"
 labHipAmp = Label(root, advancedLabelSett)
-# wzmocnienie stawu kolanowego
+
 advancedLabelSett["text"] = "Wzmocnienie stawu kolanowego:"
+labKneeAmp = Label(root, advancedLabelSett)
 
 advancedLabelSett["text"] = "Wzmocnienie stawu skokowego:"
-labMoreAmp = Label(root, advancedLabelSett)
+labAnkAmp = Label(root, advancedLabelSett)
 
 entHipAmp = Entry(root, advancedEntrySett)
-
-entMoreAmp = Entry(root, advancedEntrySett)
+entKneeAmp = Entry(root, advancedEntrySett)
+entAnkAmp = Entry(root, advancedEntrySett)
 
 adv_widgets.append(labHipAmp)
-adv_widgets.append(labMoreAmp)
+adv_widgets.append(labKneeAmp)
+adv_widgets.append(labAnkAmp)
 adv_widgets.append(entHipAmp)
-adv_widgets.append(entMoreAmp)
+adv_widgets.append(entKneeAmp)
+adv_widgets.append(entAnkAmp)
 
 
 def spawnAdvancedScreen():
 	# hide basic widgets
 	for w in bas_widgets:
 		w.grid_forget()
-		
+	
+	# change labels
+	labGperPlus["text"] = u"Tk "+u"\u21E7"
+	labGperMinus["text"] = u"Tk "+u"\u21E9"
+	labGampPlus["text"] = u"Wk "+u"\u21E7"
+	labGampMinus["text"] = u"Wk "+u"\u21E9"
+	
 	# spawn advanced widgets
-	global labHipAmp
-	global labMoreAmp
+	#global labHipAmp, labKneeAmp, labAnkAmp
 	labHipAmp.grid(row=2, column=2, sticky=E)
-	labMoreAmp.grid(row=4, column=2, sticky=E)
+	labKneeAmp.grid(row=3, column=2, sticky=E)
+	labAnkAmp.grid(row=4, column=2, sticky=E)
 	entHipAmp.grid(row=2, column=3, sticky=W)
-	entMoreAmp.grid(row=4, column=3, sticky=W)
+	entKneeAmp.grid(row=3, column=3, sticky=W)
+	entAnkAmp.grid(row=4, column=3, sticky=W)
 
 
 def respawnBasicScreen():
 	# hide advanced widgets
 	for w in adv_widgets:
 		w.grid_forget()
+	
+	# change labels
+	labGperPlus["text"] = u"wybór "+u"\u21E7"
+	labGperMinus["text"] = u"wybór "+u"\u21E9"
+	labGampPlus["text"] = u"wzm.  "+u"\u21E7"
+	labGampMinus["text"] = u"wzm. "+u"\u21E9"
 		
 	# spawn basic widgets
 	labStepTime.grid(row=2, column=2, sticky=E)
 	entStepTime.grid(row=2, column=3, sticky=W)
+	labStepAmp.grid(row=3, column=2, sticky=E)
+	entStepAmp.grid(row=3, column=3, sticky=W)
 
 def switchMode():
 	global advanced
@@ -281,6 +357,15 @@ def switchMode():
 	else:
 		advanced = True
 		spawnAdvancedScreen()
+
+def setMode(newMode):
+	global advanced
+	advanced = newMode
+	if advanced:
+		respawnBasicScreen()
+	else:
+		spawnAdvancedScreen()
+	
 
 def togKey():
 	global KeyCode
@@ -333,7 +418,8 @@ if key_debug:
 	
 	keyButton2 = Button(wrapper, text = "Toggle key", command = togKey)
 	keyButton2.grid(row=4, column=2)
-	
+
+if anihi_key:
 	closeB = Button(wrapper, text = "Annihilate", command = killall)
 	closeB.grid(row=5, column=2)
 
