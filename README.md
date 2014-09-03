@@ -1,3 +1,8 @@
+###ver 0.7.1:
+- czytanie wszystkich 5 sygnalow zawierajacych wartosci amplitud itp do slownika serial_table
+- podswietlanie wszystkich 5 pol w razie modyfikacji
+- usuniecie loga z trybu odblokowanego
+
 ###ver 0.6.1:
 - czytanie konkretnych sygnałów po serialu
 - podswietlenie lub inny podobny sygnal w momencie zmieny wartosci -> update tylko jesli sie zmienily wzgledem ostatniego stau trzymanego w tablicy

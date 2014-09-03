@@ -423,7 +423,7 @@ if anihi_key:
 	closeB = Button(wrapper, text = "Annihilate", command = killall)
 	closeB.grid(row=5, column=2)
 
-root.title("ArduPi 0.6.1")
+root.title("ArduPi 0.7.1")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))
