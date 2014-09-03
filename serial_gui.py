@@ -233,7 +233,7 @@ bas_widgets.append(entStepTime)
 advancedLabelSett["text"] = "Amplituda biodra:"
 labHipAmp = Label(root, advancedLabelSett)
 
-advancedLabelSett["text"] = "Amplituda czegoś:"
+advancedLabelSett["text"] = "Amplituda łokcia:"
 labMoreAmp = Label(root, advancedLabelSett)
 
 entHipAmp = Entry(root, advancedEntrySett)
@@ -284,22 +284,29 @@ def togKey():
 		KeyCode = False
 	else:
 		KeyCode = True
-	print KeyCode
+	if debug: print KeyCode
+
+def setKey(newKey):
+	global KeyCode
+	KeyCode = newKey
+	if debug: print KeyCode
 
 def showRoot():
-	wrapper.withdraw()
+	
 	root.overrideredirect(True)
 	root.geometry("{0}x{1}+0+0".format(winWid, winHei))
 	#root.after(time_space, update_from_serial)
 	root.update()
 	root.deiconify()
+	wrapper.withdraw()
 	
 def showWrapper():
-	root.withdraw()
+	
 	wrapper.overrideredirect(True)
 	wrapper.geometry("{0}x{1}+0+0".format(winWid, winHei))
 	wrapper.update()
 	wrapper.deiconify()
+	root.withdraw()
 
 def killall():
 	global threadWork
