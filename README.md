@@ -1,6 +1,12 @@
+###ver 0.7.3:
+- oficjalne tlo przy zablokowanym ekranie
+- podswietlanie etykiety wybraego pola w trybie zaawansowanym
+
 ###ver 0.7.2:
 - nowe tlo z oficjalnym logiem
 - marginesy dla etykiet dopasowane pod logo w tle
+- przeniesiono obrazy do folderu img/
+- poprawione kolejności wyświetlania etykiet +/- po prawej
 
 ###ver 0.7.1:
 - czytanie wszystkich 5 sygnalow zawierajacych wartosci amplitud itp do slownika serial_table

@@ -58,6 +58,12 @@ winHei = 480 #root.winfo_screenheight()
 
 wrapper = Tk()
 
+# backgroud wrapper
+background_image2 = PhotoImage(master=wrapper, file="img/back.gif")
+background_label2 = Label(wrapper, image=background_image2)
+background_label2.photo = background_image2
+background_label2.place(x=0, y=0, relwidth=1, relheight=1)
+
 # intervals between updating variables from serial
 time_space = 25
 
@@ -104,6 +110,7 @@ def update_from_serial():
 		global last_received
 		global gampt, gpert, hampt, kampt, aampt
 		e = last_received[1:12]
+		# checking for authorization
 		if e[0:5] == 'KEY 0':
 			print "-------" + e[9:10]
 			if e[9:10] == '0':
@@ -114,6 +121,8 @@ def update_from_serial():
 				setKey(True)
 				showRoot()
 
+	# if KeyCode we update entry values
+	# authorization is KeyCode bool
 	if KeyCode:
 		if e[0:3] == 'ADV':
 			if e[9:10] == '0':
@@ -162,6 +171,25 @@ def update_from_serial():
 			#entAnkAmp.insert(0, e[5:11])
 		else:
 			pass
+		
+		# show chosen entry
+		if advanced:
+			if e[0:4] == 'HMOD':
+				labHipAmp['fg'] = fgBlue
+				labAnkAmp['fg'] = None
+				labKneeAmp['fg'] = None
+			elif e[0:4] == 'AMOD':
+				labHipAmp['fg'] = None
+				labAnkAmp['fg'] = fgBlue
+				labKneeAmp['fg'] = None
+			elif e[0:4] == 'KMOD':
+				labHipAmp['fg'] = None
+				labAnkAmp['fg'] = None
+				labKneeAmp['fg'] = fgBlue
+			else:
+				pass
+		
+		# if for lightup counters
 		if gpert > 0:
 			gpert -= 1
 		else:
@@ -217,10 +245,13 @@ rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength
 
 padTopLabel = (90,40)
 padYLabel = 38
+# background settings for labels
 bgRow1 = '#fefffc'
 bgRow2 = '#e7f2f7'
 bgRow3 = '#c6dae3'
 bgRow4 = '#afc1cc'
+# foreground settings for labels
+fgBlue = '#1d96ca'
 
 # label for button 0 on the left
 buttonLabelSett["text"]="START "
@@ -266,13 +297,14 @@ labGampMinus.grid(row=4, column=4, sticky=E, pady=padYLabel)
 # info for keyCode block window
 labStepTime = Label(wrapper, {"text":"Oczekiwanie na autoryzację...", \
 "font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"})
-labStepTime.grid(row=2, column=2, pady=20)
+#labStepTime.grid(row=2, column=2, pady=20)
+labStepTime.place(x=200, y=200)
 
 # banner
-ph2 = PhotoImage(master=wrapper, file="img/lol.gif")
-ban2 = Label(wrapper, image=ph2)
-ban2.image = ph2
-ban2.grid(row=1, column=2, padx=70, pady=50)
+#ph2 = PhotoImage(master=wrapper, file="img/lol.gif")
+#ban2 = Label(wrapper, image=ph2)
+#ban2.image = ph2
+#ban2.grid(row=1, column=2, padx=70, pady=50)
 
 # basic widgets for hiding
 basicLabelSett["text"] = "Czas trwania kroku (Tk):"
@@ -371,7 +403,6 @@ def setMode(newMode):
 	else:
 		spawnAdvancedScreen()
 	
-
 def togKey():
 	global KeyCode
 	if KeyCode:
@@ -386,7 +417,6 @@ def setKey(newKey):
 	if debug: print KeyCode
 
 def showRoot():
-	
 	root.overrideredirect(True)
 	root.geometry("{0}x{1}+0+0".format(winWid, winHei))
 	#root.after(time_space, update_from_serial)
@@ -395,7 +425,6 @@ def showRoot():
 	wrapper.withdraw()
 	
 def showWrapper():
-	
 	wrapper.overrideredirect(True)
 	wrapper.geometry("{0}x{1}+0+0".format(winWid, winHei))
 	wrapper.update()
@@ -412,8 +441,9 @@ if key_debug:
 	exitButton = Button(root, text = "Toggle view", command = showWrapper)
 	exitButton.grid(row=5, column=2)
 	
-	exitButtonWr = Button(wrapper, text = "Toggle view", command = showRoot)
-	exitButtonWr.grid(row=3, column=2)
+	exitButtonWr = Button(wrapper, text = "Toggle view", command = showRoot, width=10)
+	#exitButtonWr.grid(row=3, column=2)
+	exitButtonWr.place(x=winWid/2-60, y=230)
 
 	switchButton = Button(root, text = "Advanced", command = switchMode)
 	switchButton.grid(row=5, column=3)
@@ -421,14 +451,19 @@ if key_debug:
 	keyButton = Button(root, text = "Toggle key", command = togKey)
 	keyButton.grid(row=5, column=4)
 	
-	keyButton2 = Button(wrapper, text = "Toggle key", command = togKey)
-	keyButton2.grid(row=4, column=2)
+	keyButton2 = Button(wrapper, text = "Toggle key", command = togKey, width=10)
+	#keyButton2.grid(row=4, column=2)
+	keyButton2.place(x=winWid/2-60, y=260)
 
 if anihi_key:
-	closeB = Button(wrapper, text = "Annihilate", command = killall)
-	closeB.grid(row=5, column=2)
+	closeB = Button(wrapper, text = "Annihilate", command = killall, width=10)
+	#closeB.grid(row=5, column=2)
+	closeB.place(x=winWid/2-60, y=290)
+	
+	closeC = Button(wrapper, text='x', command = killall, width=1)
+	closeC.place(x=600, y=5)
 
-root.title("ArduPi 0.7.2")
+root.title("ArduPi 0.7.3")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))
