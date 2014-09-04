@@ -10,12 +10,12 @@ from threading import Thread
 
 # set to True for debug messages
 debug = False
-key_debug = False
+key_debug = True
 anihi_key = True
 spam_serial = True
 
 # set to True for serial communication
-ser_com = True
+ser_com = False
 
 if debug: print("imports done!")
 
@@ -48,7 +48,7 @@ if ser_com:
 root = Tk()
 
 # backgroud
-background_image = PhotoImage(file="back.gif")
+background_image = PhotoImage(file="img/back.gif")
 background_label = Label(root, image=background_image)
 background_label.photo = background_image
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
@@ -215,42 +215,47 @@ basicLabelSett = {"font":labelFont, "width":29, "justify":RIGHT, "wraplength":"5
 advancedLabelSett = {"font":labelFont, "width":29, "justify":RIGHT, "wraplength":"500"}
 rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
 
-padYLabel = 36
+padTopLabel = (90,40)
+padYLabel = 38
+bgRow1 = '#fefffc'
+bgRow2 = '#e7f2f7'
+bgRow3 = '#c6dae3'
+bgRow4 = '#afc1cc'
 
 # label for button 0 on the left
 buttonLabelSett["text"]="START "
-button0 = Label(root, buttonLabelSett)
-button0.grid(row=1, column=1, sticky=W, pady=padYLabel)
+button0 = Label(root, buttonLabelSett, bg=bgRow1)
+button0.grid(row=1, column=1, sticky=W, pady=padTopLabel)
 # label for button 1 on the left
 buttonLabelSett["text"]="STOP   "
-button1 = Label(root, buttonLabelSett)
+button1 = Label(root, buttonLabelSett, bg=bgRow2)
 button1.grid(row=2, column=1, sticky=W, pady=padYLabel)
 # label for button 2 on the left
 buttonLabelSett["text"]="PAUZA "
-button2 = Label(root, buttonLabelSett)
+button2 = Label(root, buttonLabelSett, bg=bgRow3)
 button2.grid(row=3, column=1, sticky=W, pady=padYLabel)
 # label for button 3 on the left
 buttonLabelSett["text"]="ZAAWA."
-button3 = Label(root, buttonLabelSett)
+button3 = Label(root, buttonLabelSett, bg=bgRow4)
 button3.grid(row=4, column=1, sticky=W, pady=padYLabel)
 
 
 # label for button 0 on the right
-rightButtonLabelSett["text"]=u"wybór "+u"\u21E7"
-labGperPlus = Label(root, rightButtonLabelSett)
-labGperPlus.grid(row=1, column=4, sticky=E)
+rightButtonLabelSett["text"]=u"Tk "+u"\u21E7"
+labGperPlus = Label(root, rightButtonLabelSett, bg=bgRow1)
+labGperPlus.grid(row=1, column=4, sticky=E, pady=padTopLabel)
 # label for button 1 on the right
-rightButtonLabelSett["text"]=u"wybór "+u"\u21E9"
-labGperMinus = Label(root, rightButtonLabelSett)
-labGperMinus.grid(row=2, column=4, sticky=E)
+rightButtonLabelSett["text"]=u"Tk "+u"\u21E9"
+labGperMinus = Label(root, rightButtonLabelSett, bg=bgRow2)
+labGperMinus.grid(row=2, column=4, sticky=E, pady=padYLabel)
 # label for button 2 on the right
-rightButtonLabelSett["text"]=u"wzm. "+u"\u21E7"
-labGampPlus = Label(root, rightButtonLabelSett)
-labGampPlus.grid(row=3, column=4, sticky=E)
+rightButtonLabelSett["text"]=u"Wk "+u"\u21E7"
+labGampPlus = Label(root, rightButtonLabelSett, bg=bgRow3)
+labGampPlus.grid(row=3, column=4, sticky=E, pady=padYLabel)
 # label for button 3 on the right
-rightButtonLabelSett["text"]=u"wzm. "+u"\u21E9"
-labGampMinus = Label(root, rightButtonLabelSett)
-labGampMinus.grid(row=4, column=4, sticky=E)
+rightButtonLabelSett["text"]=u"Wk "+u"\u21E9"
+labGampMinus = Label(root, rightButtonLabelSett, bg=bgRow4)
+labGampMinus.grid(row=4, column=4, sticky=E, pady=padYLabel)
 
 # banner for main window
 #photo = PhotoImage(file="logo_small.gif")
@@ -259,23 +264,23 @@ labGampMinus.grid(row=4, column=4, sticky=E)
 #banner.grid(row=1, column=2, columnspan=2)
 
 # info for keyCode block window
-labStepTime = Label(wrapper, {"text":"Koteł przeprasza :< Trwają prace konserwatorskie...", \
+labStepTime = Label(wrapper, {"text":"Oczekiwanie na autoryzację...", \
 "font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"})
 labStepTime.grid(row=2, column=2, pady=20)
 
 # banner
-ph2 = PhotoImage(master=wrapper, file="lol.gif")
+ph2 = PhotoImage(master=wrapper, file="img/lol.gif")
 ban2 = Label(wrapper, image=ph2)
 ban2.image = ph2
 ban2.grid(row=1, column=2, padx=70, pady=50)
 
 # basic widgets for hiding
 basicLabelSett["text"] = "Czas trwania kroku (Tk):"
-labStepTime = Label(root, basicLabelSett)
+labStepTime = Label(root, basicLabelSett, bg=bgRow2)
 labStepTime.grid(row=2, column=2, sticky=E)
 
 basicLabelSett["text"] = "Wzmocnienie kroku (Wk):"
-labStepAmp = Label(root, basicLabelSett)
+labStepAmp = Label(root, basicLabelSett, bg=bgRow3)
 labStepAmp.grid(row=3, column=2, sticky=E)
 
 entStepTime = Entry(root, basicEntrySett)
@@ -291,13 +296,13 @@ bas_widgets.append(entStepAmp)
 
 # advanced widgets for hiding
 advancedLabelSett["text"] = "Wzmocnienie stawu biodrowego:"
-labHipAmp = Label(root, advancedLabelSett)
+labHipAmp = Label(root, advancedLabelSett, bg=bgRow2)
 
 advancedLabelSett["text"] = "Wzmocnienie stawu kolanowego:"
-labKneeAmp = Label(root, advancedLabelSett)
+labKneeAmp = Label(root, advancedLabelSett, bg=bgRow3)
 
 advancedLabelSett["text"] = "Wzmocnienie stawu skokowego:"
-labAnkAmp = Label(root, advancedLabelSett)
+labAnkAmp = Label(root, advancedLabelSett, bg=bgRow4)
 
 entHipAmp = Entry(root, advancedEntrySett)
 entKneeAmp = Entry(root, advancedEntrySett)
@@ -317,11 +322,11 @@ def spawnAdvancedScreen():
 		w.grid_forget()
 	
 	# change labels
-	labGperPlus["text"] = u"Tk "+u"\u21E7"
-	labGperMinus["text"] = u"Tk "+u"\u21E9"
-	labGampPlus["text"] = u"Wk "+u"\u21E7"
-	labGampMinus["text"] = u"Wk "+u"\u21E9"
-	
+	labGperPlus["text"] = u"wybór "+u"\u21E7"
+	labGperMinus["text"] = u"wybór "+u"\u21E9"
+	labGampPlus["text"] = u"wzm.  "+u"\u21E7"
+	labGampMinus["text"] = u"wzm. "+u"\u21E9"
+		
 	# spawn advanced widgets
 	#global labHipAmp, labKneeAmp, labAnkAmp
 	labHipAmp.grid(row=2, column=2, sticky=E)
@@ -338,10 +343,10 @@ def respawnBasicScreen():
 		w.grid_forget()
 	
 	# change labels
-	labGperPlus["text"] = u"wybór "+u"\u21E7"
-	labGperMinus["text"] = u"wybór "+u"\u21E9"
-	labGampPlus["text"] = u"wzm.  "+u"\u21E7"
-	labGampMinus["text"] = u"wzm. "+u"\u21E9"
+	labGperPlus["text"] = u"Tk "+u"\u21E7"
+	labGperMinus["text"] = u"Tk "+u"\u21E9"
+	labGampPlus["text"] = u"Wk "+u"\u21E7"
+	labGampMinus["text"] = u"Wk "+u"\u21E9"
 		
 	# spawn basic widgets
 	labStepTime.grid(row=2, column=2, sticky=E)
@@ -423,7 +428,7 @@ if anihi_key:
 	closeB = Button(wrapper, text = "Annihilate", command = killall)
 	closeB.grid(row=5, column=2)
 
-root.title("ArduPi 0.7.1")
+root.title("ArduPi 0.7.2")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))

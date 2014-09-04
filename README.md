@@ -1,3 +1,7 @@
+###ver 0.7.2:
+- nowe tlo z oficjalnym logiem
+- marginesy dla etykiet dopasowane pod logo w tle
+
 ###ver 0.7.1:
 - czytanie wszystkich 5 sygnalow zawierajacych wartosci amplitud itp do slownika serial_table
 - podswietlanie wszystkich 5 pol w razie modyfikacji
