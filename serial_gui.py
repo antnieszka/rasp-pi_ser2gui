@@ -245,6 +245,7 @@ rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength
 
 padTopLabel = (90,40)
 padYLabel = 38
+bgLabelLocked = '#eaf3fb'
 # background settings for labels
 bgRow1 = '#fefffc'
 bgRow2 = '#e7f2f7'
@@ -296,7 +297,8 @@ labGampMinus.grid(row=4, column=4, sticky=E, pady=padYLabel)
 
 # info for keyCode block window
 labStepTime = Label(wrapper, {"text":"Oczekiwanie na autoryzację...", \
-"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500"})
+"font":labelFont, "width":None, "justify":RIGHT, "wraplength":"500", \
+"bg":bgLabelLocked})
 #labStepTime.grid(row=2, column=2, pady=20)
 labStepTime.place(x=200, y=200)
 
