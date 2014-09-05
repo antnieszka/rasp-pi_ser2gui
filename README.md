@@ -1,3 +1,8 @@
+###ver 1.0.0:
+- dopieszczenie kodow
+- poprawiony sygnal ADV
+- ukrycie przyciskow
+
 ###ver 0.7.3:
 - oficjalne tlo przy zablokowanym ekranie
 - podswietlanie etykiety wybraego pola w trybie zaawansowanym

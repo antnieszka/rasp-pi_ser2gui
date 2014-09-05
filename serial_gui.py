@@ -4,25 +4,25 @@
 from serial import Serial
 from Tkinter import *
 from time import sleep, time
-import re
+#import re
 import tkFont
 from threading import Thread
 
 # set to True for debug messages
 debug = False
-key_debug = True
-anihi_key = True
+key_debug = False
+anihi_key = False
 spam_serial = True
 
 # set to True for serial communication
-ser_com = False
+ser_com = True
 
 if debug: print("imports done!")
 
 # serial settings
 serial_bauds = 57600#9600
 serial_port = '/dev/ttyACM0'#'/dev/ttyAMA0'
-serial_pattern = re.compile("\\w{4}\\ \\dx\\d{4}")
+#serial_pattern = re.compile("\\w{4}\\ \\dx\\d{4}")
 
 # advanced mode
 advanced = False
@@ -125,10 +125,10 @@ def update_from_serial():
 	# authorization is KeyCode bool
 	if KeyCode:
 		if e[0:3] == 'ADV':
-			if e[9:10] == '0':
-				setMode(False)
-			else:
+			if e[9:10] == '1':
 				setMode(True)
+			else:
+				setMode(False)
 		elif e[0:5] == 'GPER ':
 			if serial_table["GPER"] <> e[5:11]:
 				entStepTime['background'] = lightUpColour
@@ -176,15 +176,15 @@ def update_from_serial():
 		if advanced:
 			if e[0:4] == 'HMOD':
 				labHipAmp['fg'] = fgBlue
-				labAnkAmp['fg'] = None
-				labKneeAmp['fg'] = None
+				labAnkAmp['fg'] = 'black'
+				labKneeAmp['fg'] = 'black'
 			elif e[0:4] == 'AMOD':
-				labHipAmp['fg'] = None
+				labHipAmp['fg'] = 'black'
 				labAnkAmp['fg'] = fgBlue
-				labKneeAmp['fg'] = None
+				labKneeAmp['fg'] = 'black'
 			elif e[0:4] == 'KMOD':
-				labHipAmp['fg'] = None
-				labAnkAmp['fg'] = None
+				labHipAmp['fg'] = 'black'
+				labAnkAmp['fg'] = 'black'
 				labKneeAmp['fg'] = fgBlue
 			else:
 				pass
@@ -401,9 +401,9 @@ def setMode(newMode):
 	global advanced
 	advanced = newMode
 	if advanced:
-		respawnBasicScreen()
-	else:
 		spawnAdvancedScreen()
+	else:
+		respawnBasicScreen()
 	
 def togKey():
 	global KeyCode
