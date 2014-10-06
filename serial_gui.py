@@ -213,18 +213,33 @@ def update_from_serial():
 	else:
 		# key OFF
 		if debug: print 'nope'
-		
-	# value update for gui
+	
+	# value update for gui + hex->deci conversion
 	entStepTime.delete(0, END)
-	entStepTime.insert(0, serial_table["GPER"])
+	try:
+		entStepTime.insert(0, int(serial_table["GPER"],16))
+	except:
+		if debug: print "null value for GPER"
 	entStepAmp.delete(0, END)
-	entStepAmp.insert(0, serial_table["GAMP"])
+	try:
+		entStepAmp.insert(0, int(serial_table["GAMP"],16))
+	except:
+		if debug: print "null value for GAMP"
 	entHipAmp.delete(0, END)
-	entHipAmp.insert(0, serial_table["HAMP"])
+	try:
+		entHipAmp.insert(0, int(serial_table["HAMP"],16))
+	except:
+		if debug: print "null value for HAMP"
 	entKneeAmp.delete(0, END)
-	entKneeAmp.insert(0, serial_table["KAMP"])
+	try:
+		entKneeAmp.insert(0, int(serial_table["KAMP"],16))
+	except:
+		if debug: print "null value for KAMP"
 	entAnkAmp.delete(0, END)
-	entAnkAmp.insert(0, serial_table["AAMP"])
+	try:
+		entAnkAmp.insert(0, int(serial_table["AAMP"],16))
+	except:
+		if debug: print "null value for AAMP"
 	root.after(time_space, update_from_serial)  # reschedule event in time_space
 
 
