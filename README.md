@@ -1,3 +1,9 @@
+###TODO:
+- config
+
+###ver 1.1.0:
+- wyświetlanie i obsługa kodów stanów
+
 ###ver 1.0.0:
 - dopieszczenie kodow
 - poprawiony sygnal ADV

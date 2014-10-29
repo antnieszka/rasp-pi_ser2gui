@@ -105,6 +105,7 @@ hampt = 0
 # updating method (checks serial for values)
 def update_from_serial():
 	# serial update
+	e = ''
 	if spam_serial:
 		# key ON
 		global last_received
@@ -169,6 +170,25 @@ def update_from_serial():
 			print 'Got AAMP with value: ' + e[5:11]
 			#entAnkAmp.delete(0, END)
 			#entAnkAmp.insert(0, e[5:11])
+		elif e[0:1] == 'E':
+			if e[0:5] == 'EXCLB':
+				stateLabel["text"]="Kalibracja..."
+			elif e[0:5] == 'EXTRU':
+				stateLabel["text"]="Wznoszenie..."
+			elif e[0:5] == 'EIDLL':
+				stateLabel["text"]="Gotowość..."
+			elif e[0:5] == 'EXTRD':
+				stateLabel["text"]="Opadanie..."
+			elif e[0:5] == 'ESTRT':
+				stateLabel["text"]="Rozpoczynanie..."
+			elif e[0:5] == 'EWALK':
+				stateLabel["text"]="Chód..."
+			elif e[0:5] == 'EPAUS':
+				stateLabel["text"]="Pauza..."
+			elif e[0:5] == 'ESTOP':
+				stateLabel["text"]="Zatrzymywanie..."
+			else:
+				pass
 		else:
 			pass
 		
@@ -257,6 +277,7 @@ buttonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"15
 basicLabelSett = {"font":labelFont, "width":29, "justify":RIGHT, "wraplength":"500"}
 advancedLabelSett = {"font":labelFont, "width":29, "justify":RIGHT, "wraplength":"500"}
 rightButtonLabelSett = {"font":labelFont, "width":8, "justify":LEFT, "wraplength":"150"}
+stateLabelSett = {"font":labelFont, "width":None, "justify":None, "wraplength":None}
 
 padTopLabel = (90,40)
 padYLabel = 38
@@ -266,6 +287,7 @@ bgRow1 = '#fefffc'
 bgRow2 = '#e7f2f7'
 bgRow3 = '#c6dae3'
 bgRow4 = '#afc1cc'
+#bgRow5 = '#a9bcc8'
 # foreground settings for labels
 fgBlue = '#1d96ca'
 
@@ -338,10 +360,16 @@ entStepTime.grid(row=2, column=3, sticky=W)
 entStepAmp = Entry(root, basicEntrySett)
 entStepAmp.grid(row=3, column=3, sticky=W)
 
+# label for state indicator on the bottom
+stateLabelSett["text"]="Uruchamianie..."
+stateLabel = Label(root, stateLabelSett, bg=bgRow4)
+stateLabel.grid(row=4, column=2, columnspan=2, pady=padYLabel)
+
 bas_widgets.append(labStepTime)
 bas_widgets.append(entStepTime)
 bas_widgets.append(labStepAmp)
 bas_widgets.append(entStepAmp)
+bas_widgets.append(stateLabel)
 
 # advanced widgets for hiding
 advancedLabelSett["text"] = "Wzmocnienie stawu biodrowego:"
@@ -402,6 +430,7 @@ def respawnBasicScreen():
 	entStepTime.grid(row=2, column=3, sticky=W)
 	labStepAmp.grid(row=3, column=2, sticky=E)
 	entStepAmp.grid(row=3, column=3, sticky=W)
+	stateLabel.grid(row=4, column=2, columnspan=2, pady=padYLabel)
 
 def switchMode():
 	global advanced
@@ -480,7 +509,7 @@ if anihi_key:
 	closeC = Button(wrapper, text='x', command = killall, width=1)
 	closeC.place(x=600, y=5)
 
-root.title("ArduPi 0.7.3")
+#root.title("ArduPi 1.1.0")
 
 root.overrideredirect(True)
 root.geometry("{0}x{1}+0+0".format(winWid, winHei))
